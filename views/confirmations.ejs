@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Confirmations List</h1>
+    <% if (confirmations.length > 0) { %>
+        <ul>
+            <% for (let i = 0; i < confirmations.length; i++) { %>
+                <li>
+                    <strong>Confirmation <%= i + 1 %>:</strong>
+                    First Name: <%= confirmations[i].fname %>,
+                    Last Name: <%= confirmations[i].lname %>
+                </li>
+            <% } %>
+        </ul>
+    <% } else { %>
+        <p>No confirmations yet.</p>
+    <% } %>
+</body>
+</html>
