@@ -10,6 +10,10 @@ const PORT = 3000;
 // Tell the app to encode data into JSON format
 app.use(express.urlencoded({ extended: false }));
 
+app.use(express.static('public'));
+
+let confirmations = [];
+
 // Set your view (templating) engine to "EJS"
 // (We use a templating engine to create dynamic web pages)
 app.set('view engine', 'ejs');
@@ -34,14 +38,20 @@ app.get('/confirm', (req, res) => {
 // Define a "confirm" route, using the POST method
 app.post('/confirm', (req, res) => {
 
-    console.log(req.body);
+    //console.log(req.body);
 
     // Get the data from the form that was submitted
     // from the body of the request object
     let details = req.body;
 
+    confirmations.push(details);
+
     // Display the confirm page, pass the data
-    res.render('confirm', { details: details });
+    res.render('anything', { details: details });
+});
+
+app.get('/confirmations', (req, res) => {
+    res.render('confirmations', { data: confirmations });
 });
 
 // Tell the app to listen for requests on the designated port
