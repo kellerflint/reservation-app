@@ -10,6 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.10",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "mariadb": "^3.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
