@@ -89,8 +89,16 @@ app.post('/confirm', async (req, res) => {
     const conn = await connect();
 
     conn.query(`
-        INSERT INTO users (firstName, lastName)
-        VALUES ('${data.firstName}', '${data.lastName}');
+        INSERT INTO users (
+            firstName, 
+            lastName, 
+            email
+        )
+        VALUES (
+            '${data.firstName}', 
+            '${data.lastName}', 
+            '${data.email}'
+        );
     `);
 
     // Display the confirm page, pass the data
