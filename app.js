@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
     console.log("Hello, world - server!");
 
     // Return home page
-    res.render('home');
+    res.render('home', { data: {}, errors: [] });
 });
 
 // Define a "confirm" route, using the GET method
@@ -59,9 +59,31 @@ app.post('/confirm', async (req, res) => {
     // from the body of the request object
     //let details = req.body;
 
-    const data = {
-        firstName: req.body.fname,
-        lastName: req.body.lname
+    const data = req.body;
+
+    let isValid = true;
+    let errors = [];
+
+    if (data.firstName.trim() === '') {
+        isValid = false;
+        errors.push('First name is required');
+    }
+    if (data.lastName.trim() === '') {
+        isValid = false;
+        errors.push('Last name is required');
+    }
+    if (data.email.trim() === '') {
+        isValid = false;
+        errors.push('Email is required');
+    }
+    if (data.email && !data.email.includes('@')) {
+        isValid = false;
+        errors.push('Email format is invalid');
+    }
+
+    if (!isValid) {
+        res.render('home', { data: data, errors: errors });
+        return;
     }
 
     const conn = await connect();
@@ -70,9 +92,6 @@ app.post('/confirm', async (req, res) => {
         INSERT INTO users (firstName, lastName)
         VALUES ('${data.firstName}', '${data.lastName}');
     `);
-
-    // Add the data to the confirmations array
-    confirmations.push(details);
 
     // Display the confirm page, pass the data
     res.render('confirm', { details: data });

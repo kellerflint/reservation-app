@@ -11,8 +11,22 @@
     <h1>Registrater Now!</h1>
     <p>Please add your name to register for this event.</p>
     <form method="POST" action="/confirm">
-        <input type="text" name="fname">
-        <input type="text" name="lname">
+        <label>
+            First Name: <input type="text" name="firstName" value="<%= data.firstName %>">
+        </label>
+        <label>
+            Last Name: <input type="text" name="lastName" value="<%= data.lastName %>">
+        </label>
+        <label>
+            Email: <input type="text" name="email" value="<%= data.email %>">
+        </label>
+        <% if (errors) { %>
+            <ul class="errors">
+                <% errors.forEach((error) => { %>
+                    <li><%= error %></li>
+                <% }) %>
+            </ul>
+        <% } %>
         <button type="submit">Submit</button>
     </form>
 </body>
