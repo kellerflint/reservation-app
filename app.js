@@ -1,6 +1,25 @@
 // Get the express package 
 const express = require('express');
 
+const mariadb = require('mariadb');
+
+const pool = mariadb.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '1234',
+    database: 'reservations'
+});
+
+async function connect() {
+    try {
+        const conn = await pool.getConnection();
+        console.log('Connected to the database');
+        return conn;
+    } catch (err) {
+        console.log('Error connecting to the database: ' + err)
+    }
+}
+
 // Instantiate an express (web) app
 const app = express();
 
@@ -9,6 +28,8 @@ const PORT = 3000;
 
 // Tell the app to encode data into JSON format
 app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static('public'));
 
 // Set your view (templating) engine to "EJS"
 // (We use a templating engine to create dynamic web pages)
@@ -28,20 +49,43 @@ app.get('/', (req, res) => {
 app.get('/confirm', (req, res) => {
 
     // Send a response to the client
-    res.send('You need to post to this page!');
+    res.send('You need to post!');
 });
 
 // Define a "confirm" route, using the POST method
-app.post('/confirm', (req, res) => {
+app.post('/confirm', async (req, res) => {
 
-    console.log(req.body);
+    //console.log(req.body);
 
     // Get the data from the form that was submitted
     // from the body of the request object
-    let details = req.body;
+    //let details = req.body;
+
+    const data = {
+        firstName: req.body.fname,
+        lastName: req.body.lname
+    }
+
+    const conn = await connect();
+
+    conn.query(`
+        INSERT INTO users (firstName, lastName)
+        VALUES ('${data.firstName}', '${data.lastName}');
+    `);
 
     // Display the confirm page, pass the data
-    res.render('confirm', { details: details });
+    res.render('confirm', { details: data });
+});
+
+app.get('/confirmations', async (req, res) => {
+
+    const conn = await connect();
+
+    const rows = await conn.query('SELECT * FROM users;');
+
+    console.log(rows);
+
+    res.render('confirmations', { data: rows });
 });
 
 // Tell the app to listen for requests on the designated port
